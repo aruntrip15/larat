@@ -21,6 +21,7 @@ class CreateSettingsListsTable extends Migration
 			$table->increments('id');
 			$table->string('setting_key')->index()->unique();
 			$table->binary('setting_value')->nullable();
+			$table->enum('setting_type', array('dev','prod'))->default('dev');
 		});
 	}
 
