@@ -1,0 +1,28 @@
+1. install laravel using composer json with all dependancy included
+2. https://github.com/spatie/laravel-permission will be installed as well with it (Please refer Installation section of the link and make required changes)
+3. php artisan migrate
+4. php artisan db:seed
+
+
+Possible Errors
+
+While running migrations
+
+[Illuminate\Database\QueryException]
+SQLSTATE[42000]: Syntax error or access violation: 1071 Specified key was too long; max key length is 767 bytes (SQL: alter table users add unique users_email_unique(email))
+
+[PDOException]
+SQLSTATE[42000]: Syntax error or access violation: 1071 Specified key was too long; max key length is 767 bytes
+
+To fix this error edit the app\Providers\AppServiceProvider.php file, setting the default string length in the boot method
+
+<code>
+
+use Illuminate\Support\Facades\Schema;
+
+public function boot()
+{
+    Schema::defaultStringLength(191);
+}
+
+</code>

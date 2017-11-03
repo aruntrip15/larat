@@ -1,0 +1,40 @@
+<?php
+
+return [
+
+    'allRoles' => 'All Roles',
+    'nameOrEmail' => 'Name/Email',
+    'search' => 'SEARCH',
+    'reset' => 'RESET',
+    'name' => 'NAME',
+    'email' => 'EMAIL',
+    'role' => 'ROLE',
+    'role' => 'ROLE',
+    'created' => 'CREATED',
+    'action' => 'ACTION',
+    'create' => 'CREATE',
+    'update' => 'UPDATE',
+    'permissionName' => 'Permission Name',
+    'permission' => 'Permission',
+    'success' => 'Success!',
+    'error' => 'Error!',
+    'yes' => 'YES',
+    'cancel' => 'CANCEL',
+    'roleName' => 'Role Name',
+    'role' => 'Role',
+    'assignPermission' => 'Assign Permission',
+    'userName' => 'Name',
+    'userEmail' => 'Email',
+    'userPwd' => 'Password',
+    'userConfirmPwd' => 'Confirm Password',
+    'assignRole' => 'Assign Role',
+    'noneSelected' => 'None Selected',
+    'user' => 'User',
+    'key' => 'NAME',
+    'value' => 'VALUE',
+    'setting' => 'Setting',
+    'settingName' => 'Setting Key',
+    'settingValue' => 'Value',
+    'settingFor' => 'Setting For'
+
+];

@@ -1,0 +1,100 @@
+a.info-box-1, a.info-box-2, a.info-box-3, a.info-box-4{
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.form-card.body{
+    padding: 40px 20px 0;
+}
+
+.block-header .btn{
+    border-bottom: none !important;
+    color: #fff !important;
+}
+
+.rotate90{
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+.rotate180{
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+table th a{
+    cursor:pointer !important;
+    text-decoration: none !important;
+}
+
+.custom-modal-footer .btn{
+    min-width:120px;
+}
+
+.bootstrap-select .bs-searchbox .form-control, .bootstrap-select .bs-actionsbox .form-control, .bootstrap-select .bs-donebutton .form-control{
+    margin-left:40px;
+}
+
+
+.sidebar .menu{
+    background: url('../images/admin-nav-bg.jpg');
+    background-size: cover; 
+    background-position: center;
+}
+
+.sidebar .menu .list{
+    background: rgba(255,255,255,0.9);
+}
+
+.sidebar .user-info{
+    background: none;
+}
+
+table a:hover, a:focus{
+    text-decoration: none !important;
+}
+
+table td, table th{
+    vertical-align: middle !important;
+}
+
+
+/* -- [Start] : Custom user section in left navbar ---- */
+
+.sidebar .user-info .image {
+    float: left;
+    position: static;
+}
+
+.sidebar .user-info .info-container {
+    cursor: default;
+    display: block;
+    position: static;
+    float: left;
+    padding: 5px;
+}
+
+.sidebar .user-info{
+    height: auto;
+}
+
+.sidebar .user-info::after{
+    clear: both;
+}
+
+.sidebar .user-info .info-container .user-helper-dropdown{
+    right: 15px;
+    top: 40%;
+}
+
+/* -- [Start] : Custom user section in left navbar ---- */
+
+.form-control[readonly]{
+    cursor: not-allowed !important;
+}
