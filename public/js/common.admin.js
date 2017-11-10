@@ -1,21 +1,24 @@
 $(document).ready(function(){
 
     /** For Sorting list */
-    $('.listSortRecordLink').on('click', function(){
-        var orderName = $(this).data('ordername');
-        var orderBy = $(this).data('orderby');
+    $('.listSortRecordLink').on('click', function(event) {
 
-        if($('#orderName').val() == orderName){
-            if($('#orderBy').val() == 'asc'){
-                $('#orderBy').val('desc');
-            }else{
-                $('#orderBy').val('asc');
-            }
-        }else{
-            $('#orderName').val(orderName);
-            $('#orderBy').val(orderBy);
+      var orderBy = $(this).data('orderby');
+      var order = $(this).data('order');
+
+      if ($('#orderBy').val() == orderBy) {
+        if ($('#order').val() == 'asc') {
+          $('#order').val('desc');
         }
-        $('#listSearchForm').submit();
+        else {
+          $('#order').val('asc');
+        }
+      }
+      else{
+        $('#orderBy').val(orderBy);
+        $('#order').val(order);
+      }
+      $('#listSearchForm').submit();
     });
 
     /** Add this class to form for jquery validation */

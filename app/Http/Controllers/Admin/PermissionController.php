@@ -10,6 +10,33 @@ use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
+    public $defaults;
+
+    public $request;
+
+    public function __construct() {
+        $this->defaults = [
+            'orderBy' => 'created_at',
+            'order' => 'desc',
+            'recordsPerPage' => globalSetting('adminRecordPerPage'),
+        ];
+    }
+
+    public function get_default($key = "") {
+        return $this->defaults[$key];
+    }
+
+    public function get_value($key = "") {
+        $value = "";
+        if ($this->request->get($key) !== null) {
+            $value = $this->request->get($key);
+        }
+        else if (isset($this->defaults[$key])) {
+            $value = $this->defaults[$key];
+        }
+        return $value;
+    }
+
     /**
      * Show prermission list
      *
@@ -18,26 +45,31 @@ class PermissionController extends Controller
      */
     public function index(Request $request)
     {
-    
-        $defaultOrderName = "created_at";
-        $defaultOrderBy = "desc";
-        $recordPerPage = globalSetting('adminRecordPerPage');
-
+        $this->request = $request;
         // Sets the parameters from the get request to the variables.
-        $searchName = $request->get('name');
-        $orderBy = ($request->get('orderBy'))?$request->get('orderBy'):$defaultOrderBy;
-        $orderName = ($request->get('orderName'))?$request->get('orderName'):$defaultOrderName;
+        $searchName = $this->get_value('name');
+        $orderBy = $this->get_value('orderBy');
+        $order = $this->get_value('order');
 
         $query = DB::table('permissions');
         
-        if (isset($searchName) && $searchName != ''){
+        if (isset($searchName) && $searchName != '') {
             $query->where('name', 'like', '%'.$searchName.'%');
         }
 
-        $query->orderBy($orderName, $orderBy);
-        $permissions = $query->paginate($recordPerPage);
+        $query->orderBy($orderBy, $order);
+        $permissions = $query->paginate($this->get_default('recordsPerPage'));
         
-        return view('admin.permissionlist', ['permissions' => $permissions, 'searchFormData' => ['name'=> $searchName, 'orderBy' => $orderBy, 'orderName' => $orderName] ]);
+        return view('admin.permission.list',
+            [
+                'permissions' => $permissions,
+                'searchFormData' => [
+                    'name'=> $searchName,
+                    'orderBy' => $orderBy,
+                    'order' => $order
+                ]
+            ]
+        );
     }
 
     /**
@@ -54,7 +86,11 @@ class PermissionController extends Controller
         if($id != ''){
             $permission = DB::table('permissions')->where('id', $id)->first();
         }
-        return view('admin.permissionadd', ['permission' => $permission]);
+        return view('admin.permission.add',
+            [
+                'permission' => $permission
+            ]
+        );
     }
 
     /**
@@ -65,7 +101,7 @@ class PermissionController extends Controller
      * @return Response
      */
     public function store(Request $request)
-    {        
+    {
         $id = $request->input('id');
 
         $rules = [
@@ -104,13 +140,14 @@ class PermissionController extends Controller
      * @return Response
      */
     public function delete(Request $request, $id)
-    {        
-        DB::table('role_has_permissions')->where('permission_id', $id)->delete();
-        DB::table('model_has_permissions')->where('permission_id', $id)->delete();
-        DB::table('permissions')->where('id', $id)->delete();
+    {
+        DB::transaction(function () {
+            DB::table('role_has_permissions')->where('permission_id', $id)->delete();
+            DB::table('model_has_permissions')->where('permission_id', $id)->delete();
+            DB::table('permissions')->where('id', $id)->delete();
+        }, 3);
 
         setFlashMessage('success', trans('label.success'), trans('message.successDelete', ['attribute' => trans('label.permission') ]));
         return redirect()->route('permission list');
     }
-
 }
