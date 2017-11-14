@@ -30,17 +30,19 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['aut
     Route::get('user/list', 'UserController@index')->name('user list');
     Route::get('user/add/{id?}', 'UserController@add')->name('user add')->where('id', '[0-9]+');
     Route::post('user/store', 'UserController@store')->name('user store');
-    Route::get('user/delete/{id}', 'UserController@delete')->name('user delete')->where('id', '[0-9]+');
+    Route::post('user/action', 'UserController@action')->name('user action');
+    Route::get('user/password/{id}', 'UserController@changePassword')->name('user password')->where('id', '[0-9]+');
+    Route::post('user/store-password', 'UserController@storePassword')->name('user password store');
 
     Route::get('permission/list', 'PermissionController@index')->name('permission list');
     Route::get('permission/add/{id?}', 'PermissionController@add')->name('permission add')->where('id', '[0-9]+');
     Route::post('permission/store', 'PermissionController@store')->name('permission store');
-    Route::get('permission/delete/{id}', 'PermissionController@delete')->name('permission delete')->where('id', '[0-9]+');
+    Route::post('permission/action', 'PermissionController@action')->name('permission action');
 
     Route::get('role/list', 'RoleController@index')->name('role list');
     Route::get('role/add/{id?}', 'RoleController@add')->name('role add')->where('id', '[0-9]+');
     Route::post('role/store', 'RoleController@store')->name('role store');
-    Route::get('role/delete/{id}', 'RoleController@delete')->name('role delete')->where('id', '[0-9]+');
+    Route::post('role/action', 'RoleController@action')->name('role action');
 
     Route::get('setting/list', 'SettingController@index')->name('setting list');
     Route::get('setting/add/{id?}', 'SettingController@add')->name('setting add')->where('id', '[0-9]+');

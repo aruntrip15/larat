@@ -43,7 +43,7 @@ class SettingController extends Controller
         $query->orderBy($orderName, $orderBy);
         $settings = $query->paginate($recordPerPage);
         
-        return view('admin.settinglist', ['settings' => $settings, 'searchFormData' => ['name'=> $searchName, 'orderBy' => $orderBy, 'orderName' => $orderName] ]);
+        return view('admin.setting.list', ['settings' => $settings, 'searchFormData' => ['name'=> $searchName, 'orderBy' => $orderBy, 'orderName' => $orderName] ]);
     }
 
     /**
@@ -60,7 +60,7 @@ class SettingController extends Controller
         if($id != ''){
             $setting = DB::table('settings__lists')->where('id', $id)->first();
         }
-        return view('admin.settingadd', ['setting' => $setting]);
+        return view('admin.setting.add', ['setting' => $setting]);
     }
 
     /**

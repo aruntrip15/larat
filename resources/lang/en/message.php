@@ -18,6 +18,7 @@ return [
     'successEdit' => ':Attribute has been updated successfully',
     'successDelete' => ':Attribute has been deleted successfully',
     'confirmDelete' => 'Are you sure you want to delete this record?',
+    'confirmDeleteSelected' => 'Are you sure you want to delete selected records?',
     'noRecords' => 'No Record Found',
 
 ];

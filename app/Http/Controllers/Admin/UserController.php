@@ -47,7 +47,7 @@ class UserController extends Controller
         // Role Query
         $roles = DB::table('roles')->get();
         
-        return view('admin.userlist', ['users' => $users, 'roles' => $roles, 'searchFormData' => ['nameOrEmail'=> $searchName, 'role' => $searchRole, 'orderBy' => $orderBy, 'orderName' => $orderName] ]);
+        return view('admin.user.list', ['users' => $users, 'roles' => $roles, 'searchFormData' => ['nameOrEmail'=> $searchName, 'role' => $searchRole, 'orderBy' => $orderBy, 'orderName' => $orderName] ]);
     }
 
      /**
@@ -76,9 +76,10 @@ class UserController extends Controller
 
         $roles = DB::table('roles')->get();
 
-        return view('admin.useradd', ['user' => $user, 'roles' => $roles, 'selectedRoles' => $selectedRoles]);
+        return view('admin.user.add', ['user' => $user, 'roles' => $roles, 'selectedRoles' => $selectedRoles]);
     }
 
+    
     /**
      * 
      * Store user in database
@@ -89,11 +90,13 @@ class UserController extends Controller
     public function store(Request $request)
     {        
         $id = $request->input('id');
+        $filename = '';
 
         $rules = [
             'name' => 'required|string|min:4|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$id,
             'password' => ((!$id)?'required|':'nullable|').'min:6|confirmed',
+            'avatar' => 'mimes:jpeg,jpg,png|max:2048|nullable',
         ];
         
     
@@ -111,14 +114,25 @@ class UserController extends Controller
         
         $this->validate($request, $rules, $customMessages);
         
+        // Handle the user upload of avatar
+        if($request->hasFile('avatar')){
+            //Save file to storage
+            $request->file('avatar')->store('public/avatars');
+            // ensure every image has a different name
+            $filename = $request->file('avatar')->hashName();            
+        }
+       
         if($id){
-
             $data = ['name' => $request->input('name'), 'email' => $request->input('email'), 'updated_at' => date('Y-m-d H:i:s')];
 
             $password = $request->input('password');
             
             if($password != ''){
                 $data['password'] = bcrypt($password);
+            }
+
+            if($filename != ''){
+                $data['avatar'] = $filename;
             }
 
             DB::table('users')
@@ -135,6 +149,7 @@ class UserController extends Controller
                 'name' => $request->input('name'),
                 'email' => $request->input('email'),
                 'password' => bcrypt($request->input('password')),
+                'avatar' => $filename
             ]);
 
             setFlashMessage('success', trans('label.success'), trans('message.successCreate', ['attribute' => trans('label.user') ]));
@@ -155,20 +170,82 @@ class UserController extends Controller
 
      /**
      * 
-     * Delete User
-     *
+     * condition based user bulk action
+     * e.g. delete, active
      * @param  Request
-     * @param  Id : User Id
      * @return Response
      */
-    public function delete(Request $request, $id)
+    public function action(Request $request)
     {        
-        
-        DB::table('model_has_roles')->where('model_id', $id)->delete();
-        DB::table('users')->where('id', $id)->delete();
 
-        setFlashMessage('success', trans('label.success'), trans('message.successDelete', ['attribute' => trans('label.user') ]));
+        $ids = $request->input('bulkRecordIds');
+        $action = $request->input('bulkRecordAction');
+
+        if($action == 'delete'){
+
+            if($ids != ''){
+                $ids = explode(',',$ids);
+
+                DB::table('model_has_roles')->whereIn('model_id', $ids)->delete();
+                DB::table('users')->whereIn('id', $ids)->delete();
+
+                setFlashMessage('success', trans('label.success'), trans('message.successDelete', ['attribute' => trans('label.user') ]));    
+            }
+        }
+
         return redirect()->route('user list');
     }
+
+    /**
+     * Change user password
+     *
+     * @param  Request
+     * @param Id : User Id
+     * @return Response
+     */
+    public function changePassword(Request $request, $id)
+    {        
+
+        $user = DB::table('users')->where('id', $id)->first();
+
+        return view('admin.user.password', ['user' => $user]);
+    }
+
+    
+    /**
+     * 
+     * Store password in database
+     *
+     * @param  Request
+     * @return Response
+     */
+    public function storePassword(Request $request)
+    {        
+      
+        $rules = [
+            'id' => 'required',
+            'password' => 'required|min:6|confirmed',
+        ];
+        
+        $customMessages = [
+            'password.required' => trans('custom-validation.required', ['attribute' => trans('label.userPwd') ]),
+        ];
+    
+        $this->validate($request, $rules, $customMessages);
+        
+        $id = $request->input('id');
+        
+        $data = [ 'updated_at' => date('Y-m-d H:i:s')];
+        $data['password'] = bcrypt($request->input('password'));
+        
+        DB::table('users')
+            ->where('id', $id)
+            ->update($data);
+
+        setFlashMessage('success', trans('label.success'), trans('message.successEdit', ['attribute' => trans('label.userPwd') ]));
+
+        return redirect()->route('user add', ['id' => $id ]);
+    }
+
 
 }

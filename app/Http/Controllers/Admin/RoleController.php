@@ -38,7 +38,7 @@ class RoleController extends Controller
         $query->orderBy($orderName, $orderBy);
         $roles = $query->paginate($recordPerPage);
         
-        return view('admin.rolelist', ['roles' => $roles, 'searchFormData' => ['name'=> $searchName, 'orderBy' => $orderBy, 'orderName' => $orderName] ]);
+        return view('admin.role.list', ['roles' => $roles, 'searchFormData' => ['name'=> $searchName, 'orderBy' => $orderBy, 'orderName' => $orderName] ]);
     }
 
     /**
@@ -68,7 +68,7 @@ class RoleController extends Controller
         }
         $permissions = DB::table('permissions')->get();
 
-        return view('admin.roleadd', ['role' => $role, 'permissions' => $permissions, 'selectedPermissions' => $selectedPermissions]);
+        return view('admin.role.add', ['role' => $role, 'permissions' => $permissions, 'selectedPermissions' => $selectedPermissions]);
     }
 
     /**
@@ -127,19 +127,30 @@ class RoleController extends Controller
 
      /**
      * 
-     * Delete Prermission
+     * condition based role bulk action
      *
      * @param  Request
-     * @param  Id : Permission Id
      * @return Response
      */
-    public function delete(Request $request, $id)
+    public function action(Request $request)
     {        
-        DB::table('role_has_permissions')->where('role_id', $id)->delete();
-        DB::table('model_has_roles')->where('role_id', $id)->delete();
-        DB::table('roles')->where('id', $id)->delete();
 
-        setFlashMessage('success', trans('label.success'), trans('message.successDelete', ['attribute' => trans('label.role') ]));
+        $ids = $request->input('bulkRecordIds');
+        $action = $request->input('bulkRecordAction');
+
+        if($action == 'delete'){
+
+            if($ids != ''){
+                $ids = explode(',',$ids);
+
+                DB::table('role_has_permissions')->whereIn('role_id', $ids)->delete();
+                DB::table('model_has_roles')->whereIn('role_id', $ids)->delete();
+                DB::table('roles')->whereIn('id', $ids)->delete();
+        
+                setFlashMessage('success', trans('label.success'), trans('message.successDelete', ['attribute' => trans('label.role') ]));
+            }
+        }
+
         return redirect()->route('role list');
     }
 

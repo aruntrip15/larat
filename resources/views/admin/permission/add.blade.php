@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.admin.admin')
 
 @section('content')
     <div class="block-header">
@@ -26,6 +26,7 @@
                             @endif
                         </div>
                         <button type="submit" class="btn bg-{{globalSetting('adminTheme')}} waves-effect">@isset ($permission->id) @lang('label.update')  @else @lang('label.create') @endisset</button>
+                        <a type="button" href="{{ route('permission list') }}" class="btn btn-default waves-effect m-l-5">@lang('label.cancel')</a>
                     </form>
                 </div>
             </div>

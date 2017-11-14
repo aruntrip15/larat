@@ -11,6 +11,7 @@ return [
     'welcomeAdmin' => 'Welcome Admin',
     'dashboard' => 'DASHBOARD',
     'user' => 'USER',
+    'details' => 'DETAILS',
     'userManagement' => 'USER MANAGEMENT',
     'roleManagement' => 'ROLE MANAGEMENT',
     'permissionManagement' => 'PERMISSION MANAGEMENT',

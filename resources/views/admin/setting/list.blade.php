@@ -2,7 +2,9 @@
 
 @section('content')
     <div class="block-header">
-        <h2>@lang('title.permission') <a type="button"  href="{{ route('permission add') }}" class="m-l-15 btn bg-{{globalSetting('adminTheme')}} waves-effect"><i class="material-icons">add</i></a></h2>
+        <h2>@lang('title.setting') 
+        @if(env('APP_ENV') != 'production') <a type="button"  href="{{ route('setting add') }}" class="m-l-15 btn bg-{{globalSetting('adminTheme')}} waves-effect"><i class="material-icons">add</i></a> @endif
+        </h2>
     </div>
 
     <div class="row clearfix">
@@ -16,13 +18,13 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <div class="form-line">
-                                        <input class="form-control" placeholder="@lang('label.permissionName')" type="text" name="name" value="{{$searchFormData['name']}}">
+                                        <input class="form-control" placeholder="@lang('label.settingName')" type="text" name="name" value="{{$searchFormData['name']}}">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4 button-demo">
                                 <button type="submit" class="btn bg-{{globalSetting('adminTheme')}} waves-effect">@lang('label.search')</button>
-                                <a href="{{ route('permission list') }}" type="button" class="btn btn-default waves-effect">@lang('label.reset')</a>
+                                <a href="{{ route('setting list') }}" type="button" class="btn btn-default waves-effect">@lang('label.reset')</a>
                             </div>
                         </div>
                     </form>
@@ -32,19 +34,15 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="body table-responsive">
-                    @if($permissions->count())
+                    @if($settings->count())
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th class="grid-checkbox"> 
-                                        <input type="checkbox" id="selectAll" class="selectAllCheckBox chk-col-{{globalSetting('adminTheme')}}" />
-                                        <label for="selectAll"></label>
-                                    </th>
                                     <th>#</th>
                                     <th>
-                                        <a class="listSortRecordLink" data-orderName="name"  @if($searchFormData['orderName'] == 'name') data-orderBy="{{$searchFormData['orderBy']}}" @else data-orderBy="asc" @endif>
-                                            @lang('label.name') 
-                                            @if($searchFormData['orderName'] == 'name')
+                                        <a class="listSortRecordLink" data-orderName="setting_key"  @if($searchFormData['orderName'] == 'setting_key') data-orderBy="{{$searchFormData['orderBy']}}" @else data-orderBy="asc" @endif>
+                                            @lang('label.key') 
+                                            @if($searchFormData['orderName'] == 'setting_key')
                                                 @if($searchFormData['orderBy'] == 'asc')
                                                     <span class="caret"></span>
                                                 @else
@@ -54,9 +52,9 @@
                                         </a>
                                     </th>
                                     <th>
-                                        <a class="listSortRecordLink" data-orderName="created_at"  @if($searchFormData['orderName'] == 'created_at') data-orderBy="{{$searchFormData['orderBy']}}" @else data-orderBy="asc" @endif>
-                                            @lang('label.created') 
-                                            @if($searchFormData['orderName'] == 'created_at')
+                                        <a class="listSortRecordLink" data-orderName="setting_value"  @if($searchFormData['orderName'] == 'setting_value') data-orderBy="{{$searchFormData['orderBy']}}" @else data-orderBy="asc" @endif>
+                                            @lang('label.value') 
+                                            @if($searchFormData['orderName'] == 'setting_value')
                                                 @if($searchFormData['orderBy'] == 'asc')
                                                     <span class="caret"></span>
                                                 @else
@@ -71,32 +69,27 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($permissions as $key => $permission)
+                                @foreach ($settings as $key => $setting)
                                 <tr>
-                                    <td class="grid-checkbox"> 
-                                        <input type="checkbox" id="selectRecordCheckbox{{$key}}" class="selectRecordCheckBox chk-col-{{globalSetting('adminTheme')}}" value="{{$permission->id}}" />
-                                        <label for="selectRecordCheckbox{{$key}}"></label>
-                                    </td>
                                     <th scope="row">{{ $key+1 }}</th>
-                                    <td>{{ $permission->name }}</td>
-                                    <td>{{ $permission->created_at }}</td>
+                                    <td>{{ removeDblQuotes($setting->setting_key) }}</td>
+                                    <td>{{ removeDblQuotes($setting->setting_value) }}</td>
                                     <td>
-                                        <a href="{{ route('permission add',['id' => $permission->id ]) }}" title="{{ strtolower(trans('label.update')) }}" type="button">
+                                        <a href="{{ route('setting add',['id' => $setting->id ]) }}" {{ strtolower(trans('label.update')) }} type="button">
                                             <i class="material-icons">mode_edit</i>
                                         </a>
-                                        <a href="javascript:void(0)" title="{{ strtolower(trans('label.delete')) }}" data-id="{{$permission->id}}" onclick="bulkActionWithForm(this, 'delete', '{{ route('permission action') }}', '@lang('message.confirmDelete')')" type="button">
+                                        @if(env('APP_ENV') != 'production')
+                                        <a href="javascript:void(0)" title="{{ strtolower(trans('label.delete')) }}" data-href="{{ route('setting delete',['id' => $setting->id ]) }}" data-message="@lang('message.confirmDelete')" data-method="delete" type="button" class="deleteWithModal">
                                             <i class="material-icons col-red">delete_forever</i>
                                         </a>
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
                         <div class="align-right">
-                            <div class="card-footer-action">
-                                <button type="button" class="btn bg-red waves-effect bulkActionBtn" onclick="bulkActionWithForm(this, 'delete', '{{ route('permission action') }}', '@lang('message.confirmDeleteSelected')')" disabled><i class="material-icons col-white">delete_forever</i><span>@lang('label.delete')</span></button>
-                            </div>
-                            {{ $permissions->appends(request()->query())->links() }}
+                            {{ $settings->appends(request()->query())->links() }}
                         </div>
                     @else
                         @lang('message.noRecords')

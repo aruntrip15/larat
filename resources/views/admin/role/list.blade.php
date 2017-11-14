@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="block-header">
-        <h2>@lang('title.permission') <a type="button"  href="{{ route('permission add') }}" class="m-l-15 btn bg-{{globalSetting('adminTheme')}} waves-effect"><i class="material-icons">add</i></a></h2>
+        <h2>@lang('title.role') <a type="button"  href="{{ route('role add') }}" class="m-l-15 btn bg-{{globalSetting('adminTheme')}} waves-effect"><i class="material-icons">add</i></a></h2>
     </div>
 
     <div class="row clearfix">
@@ -16,13 +16,13 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <div class="form-line">
-                                        <input class="form-control" placeholder="@lang('label.permissionName')" type="text" name="name" value="{{$searchFormData['name']}}">
+                                        <input class="form-control" placeholder="@lang('label.roleName')" type="text" name="name" value="{{$searchFormData['name']}}">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4 button-demo">
                                 <button type="submit" class="btn bg-{{globalSetting('adminTheme')}} waves-effect">@lang('label.search')</button>
-                                <a href="{{ route('permission list') }}" type="button" class="btn btn-default waves-effect">@lang('label.reset')</a>
+                                <a href="{{ route('role list') }}" type="button" class="btn btn-default waves-effect">@lang('label.reset')</a>
                             </div>
                         </div>
                     </form>
@@ -32,7 +32,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="body table-responsive">
-                    @if($permissions->count())
+                    @if($roles->count())
                         <table class="table table-hover">
                             <thead>
                                 <tr>
@@ -71,20 +71,20 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($permissions as $key => $permission)
+                                @foreach ($roles as $key => $role)
                                 <tr>
                                     <td class="grid-checkbox"> 
-                                        <input type="checkbox" id="selectRecordCheckbox{{$key}}" class="selectRecordCheckBox chk-col-{{globalSetting('adminTheme')}}" value="{{$permission->id}}" />
+                                        <input type="checkbox" id="selectRecordCheckbox{{$key}}" class="selectRecordCheckBox chk-col-{{globalSetting('adminTheme')}}" value="{{$role->id}}" />
                                         <label for="selectRecordCheckbox{{$key}}"></label>
                                     </td>
                                     <th scope="row">{{ $key+1 }}</th>
-                                    <td>{{ $permission->name }}</td>
-                                    <td>{{ $permission->created_at }}</td>
+                                    <td>{{ $role->name }}</td>
+                                    <td>{{ $role->created_at }}</td>
                                     <td>
-                                        <a href="{{ route('permission add',['id' => $permission->id ]) }}" title="{{ strtolower(trans('label.update')) }}" type="button">
+                                        <a href="{{ route('role add',['id' => $role->id ]) }}" title="{{ strtolower(trans('label.update')) }}" type="button">
                                             <i class="material-icons">mode_edit</i>
                                         </a>
-                                        <a href="javascript:void(0)" title="{{ strtolower(trans('label.delete')) }}" data-id="{{$permission->id}}" onclick="bulkActionWithForm(this, 'delete', '{{ route('permission action') }}', '@lang('message.confirmDelete')')" type="button">
+                                        <a href="javascript:void(0)" title="{{ strtolower(trans('label.delete')) }}" data-id="{{$role->id}}" onclick="bulkActionWithForm(this, 'delete', '{{ route('role action') }}', '@lang('message.confirmDelete')')" type="button">
                                             <i class="material-icons col-red">delete_forever</i>
                                         </a>
                                     </td>
@@ -94,9 +94,9 @@
                         </table>
                         <div class="align-right">
                             <div class="card-footer-action">
-                                <button type="button" class="btn bg-red waves-effect bulkActionBtn" onclick="bulkActionWithForm(this, 'delete', '{{ route('permission action') }}', '@lang('message.confirmDeleteSelected')')" disabled><i class="material-icons col-white">delete_forever</i><span>@lang('label.delete')</span></button>
+                                <button type="button" class="btn bg-red waves-effect bulkActionBtn" onclick="bulkActionWithForm(this, 'delete', '{{ route('role action') }}', '@lang('message.confirmDeleteSelected')')" disabled><i class="material-icons col-white">delete_forever</i><span>@lang('label.delete')</span></button>
                             </div>
-                            {{ $permissions->appends(request()->query())->links() }}
+                            {{ $roles->appends(request()->query())->links() }}
                         </div>
                     @else
                         @lang('message.noRecords')
