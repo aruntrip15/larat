@@ -16,12 +16,12 @@
                 <div class="body">
                     <form method="post" action="{{ route('user store') }}" class="form_validation"  enctype="multipart/form-data" novalidate>
                         {!! csrf_field() !!}
-                        <!-- If Edit mode -->
                         @isset ($user->id)
                             <input type="hidden" name="id" value="{{$user->id}}" />
                         @endisset
 
                         <div class="row">
+                        
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <label for="name">@lang('label.userName')</label>
                                 <div class="form-group">
@@ -47,22 +47,11 @@
                                     <label for="name">@lang('label.userPwd')</label>
                                     <div class="form-group">
                                         <div class="form-line {{ $errors->has('password') ? 'error focused' : '' }}">
-                                            <input id="password" name="password" class="form-control" minlength="6" placeholder="@lang('label.userPwd')" type="password"  value="" {{(!isset($user->id))? 'required' : ''}} >
+                                            <input id="password" name="password" class="form-control" minlength="6" placeholder="@lang('label.userPwd')" type="password"  value="{{$randomPassword}}" {{(!isset($user->id))? 'required' : ''}} >
                                         </div>
                                         <div class="help-info">Min.6 characters</div>
                                         @if ($errors->has('password'))
                                             <label id="password-error" class="error" for="password">{{ $errors->first('password') }}</label>
-                                        @endif
-                                    </div>
-                            
-                                    <label for="name">@lang('label.userConfirmPwd')</label>
-                                    <div class="form-group">
-                                        <div class="form-line {{ $errors->has('confirmPassword') ? 'error focused' : '' }}">
-                                            <input id="password_confirmation" name="password_confirmation" equalTo="#password" class="form-control" minlength="6" placeholder="@lang('label.userConfirmPwd')" type="password"  value="" {{(!isset($user->id))? 'required' : ''}}>
-                                        </div>
-                                        <div class="help-info">Min. 6 characters, Equal to Password</div>
-                                        @if ($errors->has('confirmPassword'))
-                                            <label id="password_confirmation-error" class="error" for="password_confirmation">{{ $errors->first('password_confirmation') }}</label>
                                         @endif
                                     </div>
                                 @endempty
@@ -87,12 +76,17 @@
                                 @endisset
 
                             </div>
+                            
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <label for="avatar">@lang('label.userImage')</label>
                                 <div class="form-group clearfix p-t-15">
                                     <div class="{{ $errors->has('avatar') ? 'error focused' : '' }} form-line" style="overflow:hidden;">
                                         <div class="user-form-image m-r-15">
-                                            <img class="data-image" src="{{ asset('storage/avatars/' . $user->avatar) }}" alt="User">
+                                            @isset ($user->id)
+                                                <img class="data-image" src="{{ asset('storage/avatars/' . $user->avatar) }}" alt="User">
+                                            @else
+                                                <img class="data-image" src="{{ asset('storage/avatars/default-avatar.jpg') }}" alt="User">
+                                            @endisset
                                         </div>
                                         <div class="fileContainer  m-b-10">
                                             <i class="material-icons">file_upload</i>

@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="block-header">
-        <h2>@lang('title.user') <a type="button" href="{{route('user add')}}" class="m-l-15 btn bg-{{globalSetting('adminTheme')}} waves-effect"><i class="material-icons">add</i></a></h2>
+        <h2>@lang('title.user') <a title="@lang('label.add')" type="button" href="{{route('user add')}}" class="m-l-15 btn bg-{{globalSetting('adminTheme')}} waves-effect"><i class="material-icons">add</i></a></h2>
     </div>
 
     <div class="row clearfix">
@@ -118,7 +118,7 @@
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->role_name }}</td>
-                                    <td>{{ $user->created_at }}</td>
+                                    <td title="{{$user->created_at}}">{{ $user->formatted_date }}</td>
                                     <td>
                                         <a title="{{ strtolower(trans('label.update')) }}" href="{{ route('user add',['id' => $user->id ]) }}">
                                             <i class="material-icons">mode_edit</i>
