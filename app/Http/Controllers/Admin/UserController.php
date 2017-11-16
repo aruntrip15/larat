@@ -44,6 +44,10 @@ class UserController extends Controller
         $query->orderBy($orderName, $orderBy);
         $users = $query->paginate($recordPerPage);
 
+        foreach ($users as $user) {
+            $user->formatted_date = date("d F, Y", strtotime($user->created_at));
+        }
+
         // Role Query
         $roles = DB::table('roles')->get();
         
@@ -62,6 +66,7 @@ class UserController extends Controller
     {        
         $user = [];
         $selectedRoles = [];
+        $randomPassword = "";
 
         if($id != ''){
             $user = DB::table('users')->where('id', $id)->first();
@@ -73,10 +78,13 @@ class UserController extends Controller
             $selectedRoles = $query->get();
             $selectedRoles = array_pluck($selectedRoles, 'role'); // convert to simple array to check in_array value
         }
+        else {
+            $randomPassword = str_random(6);
+        }
 
         $roles = DB::table('roles')->get();
 
-        return view('admin.user.add', ['user' => $user, 'roles' => $roles, 'selectedRoles' => $selectedRoles]);
+        return view('admin.user.add', ['user' => $user, 'roles' => $roles, 'selectedRoles' => $selectedRoles, 'randomPassword' => $randomPassword]);
     }
 
     
@@ -95,7 +103,7 @@ class UserController extends Controller
         $rules = [
             'name' => 'required|string|min:4|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$id,
-            'password' => ((!$id)?'required|':'nullable|').'min:6|confirmed',
+            'password' => ((!$id)?'required|':'nullable|').'min:6',
             'avatar' => 'mimes:jpeg,jpg,png|max:2048|nullable',
         ];
         
