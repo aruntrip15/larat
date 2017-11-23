@@ -29,6 +29,8 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['aut
 
     Route::get('user/list', 'UserController@index')->name('user list');
     Route::get('user/add/{id?}', 'UserController@add')->name('user add')->where('id', '[0-9]+');
+    Route::get('user/send-email/{id?}', 'UserController@sendEmail')->name('user send email')->where('id', '[0-9]+');
+    Route::post('user/email', 'UserController@email')->name('user email');
     Route::post('user/store', 'UserController@store')->name('user store');
     Route::post('user/action', 'UserController@action')->name('user action');
     Route::get('user/password/{id}', 'UserController@changePassword')->name('user password')->where('id', '[0-9]+');
