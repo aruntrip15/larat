@@ -33,9 +33,9 @@ AdminBSB.options = {
         scrollAlwaysVisible: false,
         scrollBorderRadius: '0',
         scrollRailBorderRadius: '0',
-        scrollActiveItemWhenPageLoad: true,
+        scrollActiveItemWhenPageLoad: false,
         breakpointWidth: 1170
-    },
+    },  
     dropdownMenu: {
         effectIn: 'fadeIn',
         effectOut: 'fadeOut'
