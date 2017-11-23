@@ -262,7 +262,9 @@ AdminBSB.input = {
     activate: function () {
         //On focus event
         $('.form-control').focus(function () {
-            $(this).parent().addClass('focused');
+            if(!$(this).is('[readonly]') && !$(this).is('[disabled]')){
+                $(this).parent().addClass('focused');
+            }            
         });
 
         //On focusout event
@@ -284,7 +286,9 @@ AdminBSB.input = {
         //Not blank form
         $('.form-control').each(function () {
             if ($(this).val() !== '') {
-                $(this).parents('.form-line').addClass('focused');
+                if(!$(this).is('[readonly]') && !$(this).is('[disabled]')){
+                    $(this).parents('.form-line').addClass('focused');
+                }
             }
         });
     }
