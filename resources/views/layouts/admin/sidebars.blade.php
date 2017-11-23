@@ -45,12 +45,12 @@
             </li>
             
             <li>
-                <a href="javascript:void(0);" class="menu-toggle {{(Route::currentRouteName() == 'user list' ||  Route::currentRouteName() == 'user add' || Route::currentRouteName() == 'user password' )? 'toggled' : '' }}">
+                <a href="javascript:void(0);" class="menu-toggle {{(Route::currentRouteName() == 'user list' ||  Route::currentRouteName() == 'user add' || Route::currentRouteName() == 'user password' || Route::currentRouteName() == 'user send email')? 'toggled' : '' }}">
                     <i class="material-icons">person</i>
                     <span>User</span>
                 </a>
                 <ul class="ml-menu">
-                    <li class="{{(Route::currentRouteName()== 'user list')? 'active' : ''}}">
+                    <li class="{{(Route::currentRouteName()== 'user list' || Route::currentRouteName() == 'user send email')? 'active' : ''}}">
                         <a href="{{ route('user list') }}">
                             <span>List Users</span>
                         </a>

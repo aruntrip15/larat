@@ -30,6 +30,7 @@ return [
     'userPwd' => 'Password',
     'userNewPwd' => 'New Password',
     'userConfirmPwd' => 'Confirm Password',
+    'userSendEmail' => 'Send Email',
     'assignRole' => 'Assign Role',
     'noneSelected' => 'None Selected',
     'user' => 'User',
