@@ -126,6 +126,9 @@
                                         <a  title="{{ strtolower(trans('label.chngPwd')) }}"  href="{{ route('user password',['id' => $user->id ]) }}" type="button">
                                             <i class="material-icons">vpn_key</i>
                                         </a>
+                                        <a  title="{{ strtolower(trans('label.userSendEmail')) }}"  href="{{ route('user send email',['id' => $user->id ]) }}" type="button">
+                                            <i class="material-icons">send</i>
+                                        </a>
                                         <a  title="{{ strtolower(trans('label.delete')) }}" href="javascript:void(0)" data-id="{{$user->id}}" onclick="bulkActionWithForm(this, 'delete', '{{ route('user action') }}', '@lang('message.confirmDelete')')" type="button">
                                             <i class="material-icons col-red">delete_forever</i>
                                         </a>

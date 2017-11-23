@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -255,5 +256,31 @@ class UserController extends Controller
         return redirect()->route('user add', ['id' => $id ]);
     }
 
+    public function sendEmail(Request $request, $id) {
+        $user = DB::table('users')->select(array('name', 'email'))->where('id', $id)->first();
+        return view('admin.user.sendEmail', ['user' => $user]);
+    }
+
+    public function email(Request $request) {
+        $rules = [
+            'message' => 'required',
+        ];
+        $this->validate($request, $rules);
+
+        $obj = [
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'message' => $request->input('message'),
+            'from' => 'bhavik.shah@internal.mail',
+            'subject' => 'Email from the app'
+        ];
+        Mail::send([], [], function($message) use ($obj) {
+            $message->from($obj['from']);
+            $message->to($obj['email']);
+            $message->subject($obj['subject']);
+            $message->setBody($obj['message']);
+        });
+        return redirect()->route('user list');
+    }
 
 }
